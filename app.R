@@ -242,7 +242,11 @@ server <- function(input, output, session) {
       }, error = function(e){
       })
     }
-    m$expr
+    out <- m$expr
+    out <- out[!grepl("function", out)]
+    n <- length(out)
+    start <- sample(1:n, 1)
+    out[start:n]
   })
   
   my_file <- reactiveVal(FALSE)
@@ -271,7 +275,11 @@ server <- function(input, output, session) {
       }, error = function(e){
       })
     }
-    codes_(m$expr)
+    out <- m$expr
+    out <- out[!grepl("function", out)]
+    n <- length(out)
+    start <- sample(1:n, 1)
+    codes_(out[start:n])
   })
   
   #### code display ----
