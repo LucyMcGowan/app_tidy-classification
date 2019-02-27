@@ -21,6 +21,7 @@ source("www/credentials.R")
 ## my dance ----
 my_dance <- function(code) {
   code <- read_file(code)
+  code <- gsub("[{}]", "", code)
   tibble(expr = parse_exprs(code))
 }
 
@@ -243,7 +244,6 @@ server <- function(input, output, session) {
       })
     }
     out <- m$expr
-    out <- out[!grepl("function", out)]
     n <- length(out)
     start <- sample(1:n, 1)
     out[start:n]
@@ -276,7 +276,6 @@ server <- function(input, output, session) {
       })
     }
     out <- m$expr
-    out <- out[!grepl("function", out)]
     n <- length(out)
     start <- sample(1:n, 1)
     codes_(out[start:n])
