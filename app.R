@@ -79,6 +79,30 @@ ui <- cartridge(
                      br(), br(),
                      "Input your own username, or login with the unique name given.")
   ),
+  conditionalPanel("input.fame",
+                   container_simple(
+                   tags$body(
+                     div(style = "overflow-x:scroll; max-width: 800px; max-height: 250px",
+                         img(src = "hall.png", width = "450px"),
+                         img(src = 'hall-of-fame-1.png', width = "200px"),
+                         br(),
+                         strong("Want to join the Hall of Fame?"), br(),
+                         "1. Get ranked in the top 5", br(),
+                         "2. Tweet your success @LucyStats with #classifyrstats",     
+                         HTML('<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-text="I made it to the top 5! " data-url="https://lucy.shinyapps.io/classify" data-via="LucyStats" data-hashtags="classifyrstats" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>'),
+                         br(),
+                         "3. We will add your twitter photo to the Hall!", br(),
+                         img(src = 'hof-4.png', width = "200px"),
+                         img(src = 'hof-2.png', width = "200px"),
+                         img(src = 'hof-1.png', width = "200px"),
+                         img(src = 'hof-5.png', width = "200px"),
+                         img(src = 'hof-3.png', width = "200px"),
+                         
+                         img(src = 'hall-of-fame-1.png', width = "200px")
+                             )
+                   )
+                   )
+  ), br(),
   ### main panel ----
   conditionalPanel("input.login",
                    tags$style(HTML(
@@ -95,6 +119,9 @@ ui <- cartridge(
       }
     }
     ")),
+                   conditionalPanel("!input.fame",
+                     button_warning("fame", "View Hall of Fame")
+                     ),
                    container_with_title(
                      "classify that code!", 
                      textOutput("user", inline = TRUE), HTML("&nbsp;&nbsp;&nbsp;&nbsp;"),
@@ -151,7 +178,7 @@ ui <- cartridge(
                              "{tags$a(href = 'https://twitter.com/LucyStats', '@LucyStats', target = '_blank', style = 'color: blue')}"
                    )
                    )
-                   )
+  )
 ) 
 
 
@@ -186,7 +213,7 @@ server <- function(input, output, session) {
       n_coins({
         user_data$coins[user_data$user == user()] %>%
           as.numeric()
-        })
+      })
       rank({
         user_data %>% 
           arrange(-as.numeric(coins)) %>%
@@ -212,14 +239,14 @@ server <- function(input, output, session) {
     n_coins(n_coins() + 1)
     rank({
       user_data_() %>%
-      mutate(coins = case_when(
-        user == user() ~ as.character(n_coins()),
-        TRUE ~ coins)
+        mutate(coins = case_when(
+          user == user() ~ as.character(n_coins()),
+          TRUE ~ coins)
         ) %>%
-      arrange(-as.numeric(coins)) %>%
-      mutate(rank = 1:n()) %>%
-      filter(user == user()) %>%
-      pull(rank)
+        arrange(-as.numeric(coins)) %>%
+        mutate(rank = 1:n()) %>%
+        filter(user == user()) %>%
+        pull(rank)
     })
     update_data("users", 
                 glue('{"user": "[user()]"}',
